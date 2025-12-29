@@ -1,0 +1,19 @@
+# Build output
+target/
+build/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Local config (keep .jci.yaml.example as reference)
+# .jci.yaml

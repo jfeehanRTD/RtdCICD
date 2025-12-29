@@ -1,0 +1,48 @@
+branchProtection:
+  main:
+    dismissStaleReviews: true
+    enforceAdmins: false
+    requirePullRequest: true
+    requireStatusChecks: true
+    requiredApprovals: 1
+    statusChecks:
+    - build
+    - test
+    - SonarCloud Code Analysis
+build:
+  javaVersion: '21'
+  tool: maven
+docker:
+  imageName: ''
+  port: 8080
+  registry: ghcr.io
+git:
+  commit:
+    conventional: true
+    sign: false
+  mainBranch: main
+github:
+  owner: ''
+  repo: ''
+project:
+  description: ''
+  name: jci
+sonar:
+  organization: ''
+  projectKey: ''
+  qualityGate:
+    timeout: 300
+    wait: true
+version: '1'
+workflows:
+  build:
+    enabled: true
+  docker:
+    enabled: true
+  sonar:
+    enabled: true
+  test:
+    coverage:
+      enabled: true
+      minCoverage: 80
+    enabled: true

@@ -1,0 +1,23 @@
+# SonarCloud Configuration
+sonar.projectKey={{sonarProjectKey}}
+sonar.organization={{sonarOrganization}}
+sonar.host.url=https://sonarcloud.io
+
+# Source and test directories
+{{#isMaven}}
+sonar.sources=src/main/java
+sonar.tests=src/test/java
+sonar.java.binaries=target/classes
+sonar.java.test.binaries=target/test-classes
+sonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+{{/isMaven}}
+{{#isGradle}}
+sonar.sources=src/main/java
+sonar.tests=src/test/java
+sonar.java.binaries=build/classes
+sonar.java.test.binaries=build/classes/java/test
+sonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/test/jacocoTestReport.xml
+{{/isGradle}}
+
+# Encoding
+sonar.sourceEncoding=UTF-8

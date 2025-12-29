@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# Build outputs (rebuilt in container)
+target/
+build/
+out/
+
+# Test files
+**/test/
+**/*Test.java
+
+# Documentation
+*.md
+docs/
+
+# CI/CD
+.github/
+.jci.yaml
+Jenkinsfile
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db

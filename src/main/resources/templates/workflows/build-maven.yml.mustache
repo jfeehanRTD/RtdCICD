@@ -1,0 +1,32 @@
+{{=<% %>=}}
+name: Build
+
+on:
+  push:
+    branches: [<%mainBranch%>]
+  pull_request:
+    branches: [<%mainBranch%>]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK <%javaVersion%>
+        uses: actions/setup-java@v4
+        with:
+          java-version: '<%javaVersion%>'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: target/*.jar

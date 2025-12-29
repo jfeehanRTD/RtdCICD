@@ -1,0 +1,40 @@
+{{=<% %>=}}
+name: Test
+
+on:
+  push:
+    branches: [<%mainBranch%>]
+  pull_request:
+    branches: [<%mainBranch%>]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK <%javaVersion%>
+        uses: actions/setup-java@v4
+        with:
+          java-version: '<%javaVersion%>'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run tests with coverage
+        run: mvn -B verify --file pom.xml
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: target/site/jacoco/
+
+      - name: Add coverage to PR
+        uses: madrapps/jacoco-report@v1.6.1
+        if: github.event_name == 'pull_request'
+        with:
+          paths: target/site/jacoco/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: <%minCoverage%>

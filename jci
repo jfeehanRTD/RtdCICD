@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+#
+# jci - Java CI/CD Automation CLI Tool
+# Wrapper script to run the jci JAR
+#
+
+set -e
+
+# Resolve symlinks to get the actual script location
+SOURCE="${BASH_SOURCE[0]}"
+while [ -L "$SOURCE" ]; do
+    DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+    SOURCE="$(readlink "$SOURCE")"
+    [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+
+JAR_FILE="$SCRIPT_DIR/target/jci-1.0.0-SNAPSHOT.jar"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Check if Java is installed
+if ! command -v java &> /dev/null; then
+    echo -e "${RED}Error: Java is not installed or not in PATH${NC}"
+    echo "Please install Java 21+ to use jci"
+    exit 1
+fi
+
+# Check Java version
+JAVA_VERSION=$(java -version 2>&1 | head -n 1 | cut -d'"' -f2 | cut -d'.' -f1)
+if [[ "$JAVA_VERSION" -lt 21 ]]; then
+    echo -e "${YELLOW}Warning: Java 21+ recommended. Found Java $JAVA_VERSION${NC}"
+fi
+
+# Build if JAR doesn't exist
+if [[ ! -f "$JAR_FILE" ]]; then
+    echo -e "${YELLOW}JAR not found. Building project...${NC}"
+
+    if ! command -v mvn &> /dev/null; then
+        echo -e "${RED}Error: Maven is not installed${NC}"
+        echo "Please install Maven or build manually: mvn package -DskipTests"
+        exit 1
+    fi
+
+    cd "$SCRIPT_DIR"
+    mvn package -DskipTests -q
+
+    if [[ ! -f "$JAR_FILE" ]]; then
+        echo -e "${RED}Error: Build failed${NC}"
+        exit 1
+    fi
+
+    echo -e "${GREEN}Build complete!${NC}"
+    echo ""
+fi
+
+# Run the JAR with all arguments
+exec java -jar "$JAR_FILE" "$@"

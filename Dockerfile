@@ -1,0 +1,44 @@
+# Build stage
+FROM eclipse-temurin:21-jdk AS builder
+
+WORKDIR /app
+
+# Copy Maven wrapper and pom.xml first for dependency caching
+COPY .mvn/ .mvn/
+COPY mvnw pom.xml ./
+
+# Download dependencies (cached layer)
+RUN ./mvnw dependency:go-offline -B
+
+# Copy source code
+COPY src/ src/
+
+# Build the application
+RUN ./mvnw package -DskipTests -B
+
+# Runtime stage
+FROM eclipse-temurin:21-jre
+
+# Create non-root user for security
+RUN groupadd --gid 1000 appgroup && \
+    useradd --uid 1000 --gid appgroup --shell /bin/bash --create-home appuser
+
+WORKDIR /app
+
+# Copy the built artifact from builder stage
+COPY --from=builder /app/target/*.jar app.jar
+
+# Change ownership to non-root user
+RUN chown -R appuser:appgroup /app
+
+USER appuser
+
+# Expose application port
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
