@@ -1,3 +1,4 @@
+
 name: Test
 
 on:
@@ -35,5 +36,5 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           paths: target/site/jacoco/jacoco.xml
-          token: $ secrets.GITHUB_TOKEN "}}
+          token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: 80

@@ -22,14 +22,14 @@ git:
     sign: false
   mainBranch: main
 github:
-  owner: ''
-  repo: ''
+  owner: jfeehanRTD
+  repo: RtdCICD
 project:
   description: ''
   name: jci
 sonar:
-  organization: ''
-  projectKey: ''
+  organization: jfeehanRTD
+  projectKey: jfeehanRTD_RtdCICD
   qualityGate:
     timeout: 300
     wait: true
