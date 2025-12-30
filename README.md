@@ -389,6 +389,14 @@ Run `jci sonar setup` to configure SonarCloud
 
 ---
 
+## Additional Documentation
+
+| Guide | Description |
+|-------|-------------|
+| [SonarCloud Setup Guide](docs/SONARCLOUD_SETUP.md) | Complete guide to setting up code quality and test coverage analysis |
+
+---
+
 ## Getting Help
 
 - **jci help**: `jci --help` or `jci <command> --help`
